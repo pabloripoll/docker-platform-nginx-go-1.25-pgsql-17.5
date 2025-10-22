@@ -299,7 +299,7 @@ $ make apirest-create postgres-create
 ```
 <br>
 
-Remove default `./apirest` directory content
+Remove default `./apirest` directory content from this git repository, so you can clone you API repository on it.
 ```bash
 $ git rm -r ./apirest
 $ git clean -fd
@@ -309,6 +309,10 @@ $ rm -rfv ./apirest/.*
 ```
 
 Now `./apirest` directory can be used to install any other REST API repository
+```bash
+$ cd ./apirest
+$ git clone git@github.com:[user]/[repository].git .
+```
 
 > **Note**: Most probably it would be needed to update root `.gitignore` file to ignore the REST API one.
 
