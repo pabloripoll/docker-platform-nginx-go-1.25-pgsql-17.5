@@ -299,7 +299,7 @@ $ make apirest-create postgres-create
 ```
 <br>
 
-Remove default nginx-go platform API content
+Remove default `./apirest` directory content
 ```bash
 $ git rm -r ./apirest
 $ git clean -fd
