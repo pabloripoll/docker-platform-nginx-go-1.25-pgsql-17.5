@@ -147,23 +147,6 @@ network:
 	cd docker && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.network.yml up -d
 
 # -------------------------------------------------------------------------------------------------
-#  Container Application - latest version: laravel/laravel:^10 .
-# -------------------------------------------------------------------------------------------------
-.PHONY: app-install app-update app-install-base app-install-packages
-
-app-install: ## installs the latest application dependency packages
-	cd docker && $(DOCKER_EXEC_SSH) -c $(APPLICATION_INSTALL)
-
-app-upgrade: ## upgrades current application dependency packages - it is recommended to execute this inside the container
-	cd docker && $(DOCKER_EXEC_SSH) -c $(APPLICATION_UPDATE)
-
-app-install-base: ## installs the base framework application
-	cd docker && $(DOCKER_EXEC_SSH) -c $(APPLICATION_INSTALL_BASE)
-
-app-install-packages: ## installs the dependencies packages required from project init
-	cd docker && $(DOCKER_EXEC_SSH) -c $(APPLICATION_INSTALL_PACKAGES)
-
-# -------------------------------------------------------------------------------------------------
 #  Container settings update on the run
 # -------------------------------------------------------------------------------------------------
 .PHONY: nginx-conf php-conf php-fpm-conf
