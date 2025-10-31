@@ -282,39 +282,93 @@ Repository directories structure overview:
 ```
 <br>
 
-Set up platforms
-- Copy `.env.example` to `.env` and adjust settings (apirest port, database port, container RAM usage, etc.)
-- Configuring the GO container RAM with e.g. `APIREST_CAAS_MEM=128M`
-<br><br>
+Here’s a step-by-step guide for using this Platform repository along with your own API project:
 
-Generate the environment for each platform
-```bash
-$ make apirest-set postgres-set
-```
+- Remove the existing `./apirest` directory contents from local and from git cache
+- Install your desired repository inside `./apirest`
+- Choose between Git submodule and detached repository approaches
 <br>
 
-Create platforms containers
-```bash
-$ make apirest-create postgres-create
-```
-<br>
+## Managing the `apirest` Directory: Submodule vs Detached Repository
 
-Remove default `./apirest` directory content from this git repository, so you can clone you API repository on it.
+To remove the `./apirest` directory with the default installation content and install your desired repository inside it, there are two alternatives for managing both the platform and apirest repositories independently:
+
+### 1. **GIT Sub-module**
+
+> Git commands can be executed **only from inside the container**.
+
+- Remove `apirest` from local and git cache:
+  ```bash
+  $ rm -rfv ./apirest/* ./apirest/.[!.]*$
+  $ git rm -r --cached apirest
+  $ git commit -m "Remove apirest directory and its default installation"
+  ```
+
+- Add the desired repository as a submodule:
+  ```bash
+  $ git submodule add git@[vcs]:[account]/[repository].git ./apirest
+  $ git commit -m "Add apirest as a git submodule"
+  ```
+
+- To update submodule contents:
+  ```bash
+  $ cd ./apirest
+  $ git pull origin main  # or desired branch
+  ```
+
+- To initialize/update submodules after `git clone`:
+  ```bash
+  $ git submodule update --init --recursive
+  ```
+
+---
+
+### 2. **GIT Detached Repository (Recommended)**
+
+> Git commands can be executed **whether from inside the container or on the local machine**.
+
+- Remove `apirest` from local and git cache:
+  ```bash
+  $ rm -rfv ./apirest/* ./apirest/.[!.]*
+  $ git rm -r --cached apirest
+  $ git clean -fd
+  $ git reset --hard
+  $ git commit -m "Remove apirest directory and its default installation"
+  ```
+
+- Clone the desired repository as a detached repository:
+  ```bash
+  $ git clone git@[vcs]:[account]/[repository].git ./apirest
+  ```
+
+- The `apirest` directory is now an **independent repository**, not tracked as a submodule in your main repo. You can use `git` commands freely inside `apirest` from anywhere.
+
+---
+
+#### **Summary Table**
+
+| Approach         | Repo independence | Where to run git commands | Use case                        |
+|------------------|------------------|--------------------------|----------------------------------|
+| Submodule        | Tracked by main  | Inside container         | Main repo controls webapp version|
+| Detached (rec.)  | Fully independent| Local or container       | Maximum flexibility              |
+
+---
+
+Once the container is up, Supervisor will run the sample API script. See `./platform/nginx-go/docker/config/supervisor/conf.d/go-dev.conf`
 ```bash
-$ git rm -r ./apirest
-$ git clean -fd
-$ git reset --hard
-$ rm -rfv ./apirest/*
-$ rm -rfv ./apirest/.*
+[program:go-dev]
+command=go run main.go
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+autorestart=false
+startretries=0
 ```
 
-Now `./apirest` directory can be used to install any other REST API repository
-```bash
-$ cd ./apirest
-$ git clone git@github.com:[user]/[repository].git .
-```
+> **Note**: If API main script is other, remember to modify this file.
 
-> **Note**: Most probably it would be needed to update root `.gitignore` file to ignore the REST API one.
+> After switching to either alternative, consider adding `/apirest` to your `.gitignore` in this main platform repository to prevent accidental tracking *(especially for detached repository)*.
 
 <br>
 
