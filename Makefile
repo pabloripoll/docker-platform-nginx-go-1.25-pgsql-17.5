@@ -87,6 +87,9 @@ apirest-start: ## starts the apirest container running
 apirest-stop: ## stops the apirest container but its assets will not be destroyed
 	cd platform/$(APIREST_PLTF) && $(MAKE) stop
 
+apirest-restart: ## restarts the running apirest container
+	cd platform/$(APIREST_PLTF) && $(MAKE) restart
+
 apirest-destroy: ## destroys completly the apirest container
 	echo ${C_RED}"Attention!"${C_END};
 	echo ${C_YEL}"You're about to remove the "${C_BLU}"$(APIREST_PROJECT)"${C_END}" container and delete its image resource."${C_END};
