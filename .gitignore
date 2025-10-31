@@ -28,6 +28,7 @@ dist-ssr
 *.local
 
 vault
+platform/nginx-go/docker/config/supervisor/conf.d
 resources/database/*
 !resources/database/.gitignore
 resources/docs/apirest/project/*
