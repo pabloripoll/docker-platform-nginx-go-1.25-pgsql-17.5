@@ -30,9 +30,9 @@ dist-ssr
 vault
 platform/nginx-go/docker/config/supervisor/conf.d
 resources/database/*
-!resources/database/.gitignore
+!resources/database/.gitkeep
 resources/docs/apirest/project/*
-!resources/docs/apirest/project/.gitignore
-platform/pgsql-17/data
+!resources/docs/apirest/project/.gitkeep
+platform/pgsql-17.5/data
 apirest/*
-!apirest/.gitignore
+!apirest/.gitkeep
